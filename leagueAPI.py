@@ -12,7 +12,29 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from selenium.webdriver.support.ui import WebDriverWait as wait
+
 from selenium.webdriver.common.action_chains import ActionChains
+
+
+# driver = webdriver.Chrome(executable_path=r"chromedriver.exe")
+# wait = WebDriverWait(driver, 10)
+
+
+# def adblock():
+#     driver.get(
+#         "https://chrome.google.com/webstore/detail/adblock-%E2%80%94-best-ad-blocker/gighmmpiobklfepjocnamgkkbiglidom?hl=de")
+#     WebDriverWait(driver, 15).until(
+#         EC.visibility_of_all_elements_located(
+#             (By.CLASS_NAME, "dd-Va g-c-wb g-eg-ua-Uc-c-za g-c-Oc-td-jb-oa g-c"))).click()
+#     alert = driver.switch_to_alert()
+#     alert.accept()
+#
+#
+# adblock()
+
+
+
 
 
 def getChampionWinRate(name):
@@ -60,27 +82,52 @@ def getChampionCounters(name):
 
 
     driver = webdriver.Chrome()
-    #driver.maximize_window()
+
+    driver.maximize_window()
     driver.get(f'https://u.gg/lol/champions/{name}/counter')
+    # x_up = driver.find_element(by = By.ID, value = 'notice')
+    # x = x_up.find_element(by = By.CLASS_NAME, value = 'message-stacksclose')
+    # x.click()
+    driver.execute_script("document.body.style.zoom='100%'")
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+    # ok1 = driver.find_element(by = By.ID, value = 'notice')
+    # ok = driver.find_element(by = By.CLASS_NAME, value = 'message-component.message-button.no-children.focusable.accept-button.sp_choice_type_11.last-focusable-el');
+    # ok.click()
+
+    driver.switch_to.frame("sp_message_iframe_547654")
+
+    ok = driver.find_element(by = By.CLASS_NAME, value = 'message-stacksclose');
+    #ok = driver.find_element(by = By.CLASS_NAME, value = 'message-component.message-button.no-children.focusable.accept-button.sp_choice_type_11.last-focusable-el');
+    #ok.click()
+    ActionChains(driver).move_to_element(ok).click(ok).perform()
+    driver.switch_to.default_content()
+
+    time.sleep(10)
+
 
     search = driver.find_element(by = By.ID, value =  "content")
-    a = search.find_element(by = By.XPATH, value = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[3]/div')
-    a = driver.switch_to.active_element
+    a = search.find_element(by = By.CLASS_NAME, value = 'view-more-btn')#
+    #a = search.find_element(by = By.XPATH, value = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[3]/div')
+    #a = driver.switch_to.active_element
     # print(a.get_attribute('innerHTML'))
     while(1):
-        time.sleep(1)#2
-        # a.click()
-        ActionChains(driver).move_to_element(a).click(a).perform()
-        time.sleep(1)#3
+        #time.sleep(1)#2
+        a.click()
+        #ActionChains(driver).move_to_element(a).click(a).perform()
+        #time.sleep(1)#3
         try:
-            main = WebDriverWait(driver, 2).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@id="content"]/div/div/div/div/div[5]/div[2]/div[3]/div'))
-            )
-            a = search.find_element(by = By.XPATH, value = '//*[@id="content"]/div/div/div/div/div[5]/div[2]/div[3]/div')
+            # main = WebDriverWait(driver, 0.25).until(
+            #     EC.presence_of_element_located((By.XPATH, '//*[@id="content"]/div/div/div/div/div[5]/div[2]/div[3]/div'))
+            # )
+            #a = search.find_element(by = By.XPATH, value = '//*[@id="content"]/div/div/div/div/div[5]/div[2]/div[3]/div')
+            #a = search.findElement(By.cssSelector("a[class='view-more-btn btn-gray']"));
+            a = search.find_element(by = By.CLASS_NAME, value = 'view-more-btn')
+            #a = driver.switch_to.active_element
         except:
             break
 
-    time.sleep(1) #5
+    #time.sleep(1) #5
 
     print(driver.title)
     html = driver.page_source
